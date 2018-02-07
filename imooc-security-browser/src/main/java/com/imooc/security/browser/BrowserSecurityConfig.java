@@ -1,6 +1,11 @@
 package com.imooc.security.browser;
 
+import com.imooc.security.core.authentication.mobile.AbstractChannelSecurityConfig;
+import com.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.imooc.security.core.properties.SecurityConstants;
 import com.imooc.security.core.properties.SecurityProperties;
+import com.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
+import com.imooc.security.core.validate.code.sms.SmsCodeFilter;
 import com.imooc.security.core.validate.code.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,16 +37,10 @@ import javax.sql.DataSource;
  * @Copyright(©) 2018 by peter.
  */
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @Autowired
-    AuthenticationSuccessHandler imoocAuthenticationSuccessHandler;
-
-    @Autowired
-    AuthenticationFailureHandler imoocAuthenticationFailureHandler;
 
     @Resource
     private DataSource dataSource;
@@ -49,33 +48,21 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
-        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
-        jdbcTokenRepository.setDataSource(dataSource);
-        //jdbcTokenRepository.setCreateTableOnStartup(true);
-        return jdbcTokenRepository;
-    }
+    @Autowired
+    private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.setAuthenticationFailureHandler(imoocAuthenticationFailureHandler);
-        validateCodeFilter.afterPropertiesSet();
 
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                .loginPage("/authentication/require")
-                .loginProcessingUrl("/authentication/form")
-                .successHandler(imoocAuthenticationSuccessHandler)
-                .failureHandler(imoocAuthenticationFailureHandler)
+        applyPasswordAuthenticationConfig(http);
+
+        http.apply(validateCodeSecurityConfig)
+                .and()
+                .apply(smsCodeAuthenticationSecurityConfig)
                 .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
@@ -83,12 +70,29 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authentication/require"
-                        ,securityProperties.getBrowser().getLoginPage()
-                ,"/code/image","/static/javascripts/jquery.min.js").permitAll()
+                .antMatchers(
+                        SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,
+                        securityProperties.getBrowser().getLoginPage(),
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .csrf().disable();
+
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+//		tokenRepository.setCreateTableOnStartup(true);
+        return tokenRepository;
     }
 }

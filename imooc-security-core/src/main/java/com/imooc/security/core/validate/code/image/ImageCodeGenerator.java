@@ -1,17 +1,14 @@
-package com.imooc.security.core.validate.code;
+package com.imooc.security.core.validate.code.image;
 
 import com.imooc.security.core.properties.SecurityProperties;
+import com.imooc.security.core.validate.code.ValidateCode;
+import com.imooc.security.core.validate.code.ValidateCodeGenerator;
+import com.imooc.security.core.validate.code.image.ImageCode;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -25,7 +22,7 @@ import java.util.Random;
  * @Description: 验证码生成器
  * @Copyright(©) 2018 by peter.
  */
-public class ImageCodeGenerator implements ValidateCodeGenerator{
+public class ImageCodeGenerator implements ValidateCodeGenerator {
 
     private SecurityProperties securityProperties;
 

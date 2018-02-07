@@ -1,6 +1,8 @@
-package com.imooc.security.core.validate.code;
+package com.imooc.security.core.validate.code.sms;
 
 import com.imooc.security.core.properties.SecurityProperties;
+import com.imooc.security.core.validate.code.ValidateCode;
+import com.imooc.security.core.validate.code.ValidateCodeGenerator;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,8 @@ import java.util.Random;
  * @Description: 验证码生成器
  * @Copyright(©) 2018 by peter.
  */
-@Component("smsCodeGenerator")
-public class SmsCodeGenerator implements ValidateCodeGenerator{
+@Component("smsValidateCodeGenerator")
+public class SmsCodeGenerator implements ValidateCodeGenerator {
 
     @Autowired
     private SecurityProperties securityProperties;

@@ -1,6 +1,6 @@
 package com.imooc.security.core.validate.code;
 
-import org.springframework.stereotype.Component;
+import com.imooc.security.core.validate.code.sms.SmsCodeSender;
 
 /**
  * Today the best performance  as tomorrow newest starter!

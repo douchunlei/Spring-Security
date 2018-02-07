@@ -1,4 +1,6 @@
-package com.imooc.security.core.validate.code;
+package com.imooc.security.core.validate.code.image;
+
+import com.imooc.security.core.validate.code.ValidateCode;
 
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
  * @Description: 图形验证码实体类
  * @Copyright(©) 2018 by peter.
  */
-public class ImageCode extends ValidateCode{
+public class ImageCode extends ValidateCode {
 
     //存放验证码的图片
     private BufferedImage image;

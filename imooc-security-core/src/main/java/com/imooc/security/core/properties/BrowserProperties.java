@@ -1,7 +1,5 @@
 package com.imooc.security.core.properties;
 
-import com.imooc.security.core.validate.code.ImageCode;
-
 /**
  * Today the best performance  as tomorrow newest starter!
  * Created by IntelliJ IDEA.
@@ -16,7 +14,7 @@ import com.imooc.security.core.validate.code.ImageCode;
 public class BrowserProperties {
 
     //默认登录页
-    private String loginPage = "/imooc-signIn.html";
+    private String loginPage = SecurityConstants.DEFAULT_LOGIN_PAGE_URL;
 
     //登录默认数据返回格式
     private LoginType loginType = LoginType.JSON;

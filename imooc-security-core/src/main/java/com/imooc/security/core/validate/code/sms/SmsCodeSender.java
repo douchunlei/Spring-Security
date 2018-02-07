@@ -1,4 +1,4 @@
-package com.imooc.security.core.validate.code;
+package com.imooc.security.core.validate.code.sms;
 
 public interface SmsCodeSender {
 
