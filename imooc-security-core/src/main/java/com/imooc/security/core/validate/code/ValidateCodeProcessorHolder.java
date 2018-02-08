@@ -1,5 +1,7 @@
 package com.imooc.security.core.validate.code;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +21,13 @@ import java.util.Map;
 @Component
 public class ValidateCodeProcessorHolder {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private Map<String,ValidateCodeProcessor> validateCodeProcessors;
 
     public ValidateCodeProcessor findValidateCodeProcessor(ValidateCodeType type){
-
+        logger.info("type:"+type.getParamNameOnValidate());
         return findValidateCodeProcessor(type.toString().toLowerCase());
     }
 
