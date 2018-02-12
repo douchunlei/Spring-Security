@@ -62,4 +62,9 @@ public class BrowserSecurityController {
         }
         return new SimpleResponse("访问的服务需要身份认证，请引导用户到登录页");
     }
+
+
+
+
+
 }
